@@ -81,10 +81,10 @@ export default function Convert() {
 	return (
 		<Wrapper>
 			<div>
-				<input type="file" onChange={handleUpload} accept=".jpeg, .jpg" />
+				<input type="file" onChange={handleUpload} />
 				<span>Choose or drop file</span>
 			</div>
-			{(state.imageUpload && !state.imageAPI) ? <img src={URL.createObjectURL(state.imageUpload)} alt="Thumb" /> : null}
+			{(state.imageUpload && !state.imageAPI) ? <img src={URL.createObjectURL(state.imageUpload)} alt="Thumb" title={state.imageUpload.name} /> : null}
 			{state.imageAPI ? <img src={state.imageAPI} /> : null}
 			{state.loading ? <Loading /> : null}
 			{!state.imageAPI ? <Button text="Convert" handleClick={handleConvert} /> : null}
