@@ -85,7 +85,8 @@ export default function Convert() {
 			useWebWorker: true
 		}
 		try {
-			const compressedFile = await imageCompression(e.target.files[0], options);
+			const compressedFile = await imageCompression(e.target.files[0], options)
+			console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 			dispatch({type: "set_image_upload", data: compressedFile})
 		} catch (error) {
 			dispatch({type: "true_err"})
@@ -97,11 +98,21 @@ export default function Convert() {
 				<input type="file" onChange={handleUpload} />
 				<span>Choose or drop file</span>
 			</div>
-			{(state.imageUpload && !state.imageAPI) ? <img src={URL.createObjectURL(state.imageUpload)} alt="Thumb" title={state.imageUpload.name} /> : null}
-			{state.imageAPI ? <img src={state.imageAPI} /> : null}
-			{state.loading ? <Loading /> : null}
-			{!state.imageAPI ? <Button text="Convert" handleClick={handleConvert} /> : null}
-			{state.imageAPI ? <a href={state.imageAPI} download>Click to download</a> : null}
+			{(state.imageUpload && !state.imageAPI) 
+				? <img src={URL.createObjectURL(state.imageUpload)} alt="Thumb" title={state.imageUpload.name} /> 
+				: null}
+			{state.imageAPI 
+				? <img src={state.imageAPI} /> 
+				: null}
+			{state.loading 
+				? <Loading /> 
+				: null}
+			{(state.imageAPI || state.loading || !state.imageUpload) 
+				? null
+				: <Button text="Convert" handleClick={handleConvert} />}
+			{state.imageAPI 
+				? <a href={state.imageAPI} download>Click to download</a> 
+				: null}
 		</Wrapper>
 	)
 }

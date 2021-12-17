@@ -46,8 +46,9 @@ export const Wrapper = styled.div`
 		}
 	}
 	img {
-		height: 300px;
 		width: auto;
+		max-width: 100%;
+		height: 300px;
 	}
 	a {
 		text-decoration: none;
