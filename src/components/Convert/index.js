@@ -1,6 +1,7 @@
 import {useReducer} from 'react'
 import {Wrapper, Loading} from "./Convert.styles"
 import Button from "../Button"
+import imageCompression from 'browser-image-compression'
 
 const initialState = {
 	imageUpload: null,
@@ -52,7 +53,7 @@ export default function Convert() {
 	const handleConvert = async() => {
 		try {
 			dispatch({type: "toggle_loading"})
-			dispatch({type: "false_err"})
+
 			const myHeaders = new Headers();
 			myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM0OTI3NDU3LCJqdGkiOiJkMmZjZGJkYzMwODM0NjQ1YmE2NTBkY2FlMzllZDUzMiIsInVzZXJfaWQiOjMxOX0.fweLX5jMaCzF_Xw3AW8XINEkOSf9yM75Fx9MTfTXLG0");
 
@@ -68,15 +69,27 @@ export default function Convert() {
 
 			const data = await(await fetch("https://removebackground-wlaiaw5rxa-as.a.run.app/remove", requestOptions)).json()
 			dispatch({type: "set_image_API", data: `data:image/png;base64,${data}`})
+			dispatch({type: "false_err"})
 			dispatch({type: "toggle_loading"})
 		} catch {
 			dispatch({type: "true_err"})
 		}
 	}
 
-	const handleUpload = e => {
+	const handleUpload = async e => {
 		dispatch({type: "reset_image_API"})
 		dispatch({type: "set_image_upload", data: e.target.files[0]})
+		const options = {
+			maxSizeMB: 1,
+			maxWidthOrHeight: 1920,
+			useWebWorker: true
+		}
+		try {
+			const compressedFile = await imageCompression(e.target.files[0], options);
+			dispatch({type: "set_image_upload", data: compressedFile})
+		} catch (error) {
+			dispatch({type: "true_err"})
+		}
 	}
 	return (
 		<Wrapper>
