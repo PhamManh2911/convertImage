@@ -46,10 +46,9 @@ export const Wrapper = styled.div`
 		}
 	}
 	img {
-		box-shadow: 0px 5px 5px gray;
-		width: 200px;
-		height: 200px;
-		object-fit: cover;
+		width: 300px;
+		height: 300px;
+		object-fit: contain;
 	}
 	a {
 		text-decoration: none;
